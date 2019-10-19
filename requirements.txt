@@ -1,0 +1,11 @@
+pytorch
+torchvision
+cudatoolkit=9.0
+albumentations
+jupyterlab
+matplotlib
+numpy
+Pillow
+scikit-image
+scikit-learn
+scipy
