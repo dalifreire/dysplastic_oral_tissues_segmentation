@@ -3,7 +3,7 @@ import numpy as np
 import skimage.filters as sk_filters
 import skimage.exposure as sk_exposure
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageOps
 from pathlib import Path
 
 
@@ -266,3 +266,12 @@ def entropy(np_img, neighborhood=9, threshold=5, output_type="uint8"):
         entr = entr.astype("uint8") * 255
 
     return entr
+
+
+def cut_image_by_mask(image, mask, foreground='black', inverse=False):
+
+    if inverse:
+        mask = ImageOps.invert(mask)
+
+    foreground = Image.new('RGB', image.size, color=foreground)
+    return Image.composite(image, foreground, mask)
