@@ -145,13 +145,13 @@ def create_dataloader(method="1-original", batch_size=1, dataset_dir="/home/dali
 
     level = "all"
     image_datasets = {x: OralMiceTissuesDataset(img_dir=dataset_dir, method=method, dysplasia_level=level,
-                                                augmentation=True if x == 'test' else False,
+                                                augmentation=True if x == 'train' else False,
                                                 dataset_type='train' if x == 'train' else 'test') for x in ['train', 'test']}
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=False, num_workers=4) for x in ['train', 'test']}
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
 
-    print("Train images: {}".format(dataset_sizes['train']))
-    print("Test images: {}".format(dataset_sizes['test']))
+    print("Train images: {} (augmentation: {})".format(dataset_sizes['train'], image_datasets['train'].augmentation))
+    print("Test images: {} (augmentation: {})".format(dataset_sizes['test'], image_datasets['test'].augmentation))
     return dataloaders
 
 
