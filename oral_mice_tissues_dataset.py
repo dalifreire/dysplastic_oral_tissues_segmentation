@@ -57,7 +57,7 @@ class OralMiceTissuesDataset(Dataset):
         return x, y, fname, image.size
 
 
-def is_valid_file(filename, extensions=('.jpg', '.bmp', '.tif', 'png')):
+def is_valid_file(filename, extensions=('.jpg', '.bmp', '.tif', '.png')):
     return filename.lower().endswith(extensions)
 
 
@@ -70,7 +70,7 @@ def load_dataset(img_dir, dataset_type, method, dysplasia_level):
             if dysplasia_level.lower() == 'all' or root.endswith(dysplasia_level) or dysplasia_type in dysplasia_level:
                 for fname in sorted(fnames):
                     path_img = os.path.join(root, fname)
-                    path_mask = os.path.join(img_dir + "/mask/" + dysplasia_type, fname)
+                    path_mask = os.path.join(img_dir + "/mask/" + dysplasia_type, fname[0:-3] + "tif")
                     if is_valid_file(path_img) and is_valid_file(path_mask):
                         item = (path_img, path_mask, fname)
                         images.append(item)
