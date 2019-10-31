@@ -1,6 +1,6 @@
 pytorch
 torchvision
-cudatoolkit=9.0
+cudatoolkit==9.0
 albumentations
 jupyterlab
 matplotlib
