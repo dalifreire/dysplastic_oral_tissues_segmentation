@@ -31,22 +31,28 @@ import numpy as np
 
 class OralMiceTissuesDataset(Dataset):
 
-    def __init__(self, img_dir="/home/dalifreire/Documents/Doutorado/github/histological_oral_mice_tissues/roi",
-                 img_input_size=(256,448), img_output_size=(256,448), method="1-original", dysplasia_level="all",
-                 augmentation=True, dataset_type="train"):
+    def __init__(self, img_dir="../histological_oral_mice_tissues/roi",
+                 img_input_size=(256, 448),
+                 img_output_size=(256, 448),
+                 method="1-original",
+                 dysplasia_level="all",
+                 augmentation=True,
+                 dataset_type="train",
+                 color_model="RGB"):
         self.img_dir = img_dir
-        self.samples = load_dataset(img_dir, dataset_type, method, dysplasia_level)
         self.img_input_size = img_input_size
         self.img_output_size = img_output_size
         self.augmentation = augmentation
         self.dataset_type = dataset_type
+        self.color_model = color_model
+        self.samples = load_dataset(img_dir, dataset_type, method, dysplasia_level)
 
     def __len__(self):
         return len(self.samples)
 
     def __getitem__(self, idx):
         path_img, path_mask, fname = self.samples[idx]
-        image = load_pil_image(path_img)
+        image = load_pil_image(path_img, False, self.color_model)
         mask = load_pil_image(path_mask) if os.path.exists(path_mask) else None
 
         x, y, fname, original_size = self.transform(image, mask, fname)
@@ -141,12 +147,16 @@ def data_augmentation(input_image, output_mask, img_input_size=(256,448), img_ou
     return image, mask
 
 
-def create_dataloader(method="1-original", batch_size=1, dataset_dir="/home/dalifreire/Documents/Doutorado/github/histological_oral_mice_tissues/roi"):
+def create_dataloader(method="1-original",
+                      batch_size=1,
+                      dataset_dir="../histological_oral_mice_tissues/roi",
+                      color_model="RGB"):
 
     level = "all"
     image_datasets = {x: OralMiceTissuesDataset(img_dir=dataset_dir, method=method, dysplasia_level=level,
                                                 augmentation=True if x == 'train' else False,
-                                                dataset_type='train' if x == 'train' else 'test') for x in ['train', 'test']}
+                                                dataset_type='train' if x == 'train' else 'test',
+                                                color_model=color_model) for x in ['train', 'test']}
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=False, num_workers=4) for x in ['train', 'test']}
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
 

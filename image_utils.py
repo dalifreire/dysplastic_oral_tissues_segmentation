@@ -4,17 +4,30 @@ import skimage.filters as sk_filters
 import skimage.exposure as sk_exposure
 
 from PIL import Image, ImageDraw, ImageOps
+from skimage import io, color
 from pathlib import Path
 
 
-def load_pil_image(path, gray=False):
+def load_pil_image(path, gray=False, color_model="RGB"):
 
     with open(path, 'rb') as f:
-        img = Image.open(f)
+
         if gray:
-            return img.convert('L')     # grayscale
-        else:
-            return img.convert('RGB')  # rgb
+            return Image.open(f).convert('L')     # grayscale
+
+        elif color_model == "HSV":
+            return Image.open(f).convert('HSV')      # hsv
+
+        elif color_model == "LAB":
+            rgb = io.imread(path)
+            if rgb.shape[2] > 3:  # removes the alpha channel
+                rgb = color.rgba2rgb(rgb)
+
+            lab = color.rgb2lab(rgb)
+            lab_scaled = ((lab + [0, 128, 128]) / [100, 255, 255])*255
+            return Image.fromarray(lab_scaled.astype(np.uint8))
+
+        return Image.open(f).convert('RGB')    # rgb
 
 
 def save_pil_image(pil_image, filepath):
