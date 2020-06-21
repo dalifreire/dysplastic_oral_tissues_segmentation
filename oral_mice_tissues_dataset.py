@@ -157,7 +157,7 @@ def create_dataloader(method="1-original",
                                                 augmentation=True if x == 'train' else False,
                                                 dataset_type='train' if x == 'train' else 'test',
                                                 color_model=color_model) for x in ['train', 'test']}
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=False, num_workers=4) for x in ['train', 'test']}
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=False, num_workers=1) for x in ['train', 'test']}
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
 
     print("Train images: {} (augmentation: {})".format(dataset_sizes['train'], image_datasets['train'].augmentation))
