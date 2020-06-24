@@ -12,42 +12,54 @@ def image_path_to_np(image_path):
 def jaccard_index_score(target, prediction):
 
     mask_np = image_path_to_np(target)
-    output_np = image_path_to_np(prediction)
+    output_np = image_path_to_np(prediction).copy()
+    if np.unique(output_np).size > 2:
+        output_np[output_np > 0] = 255
     return metrics.jaccard_score(mask_np, output_np, average='micro')
 
 
 def pixel_accuracy_score(target, prediction):
 
     mask_np = image_path_to_np(target)
-    output_np = image_path_to_np(prediction)
+    output_np = image_path_to_np(prediction).copy()
+    if np.unique(output_np).size > 2:
+        output_np[output_np > 0] = 255
     return metrics.accuracy_score(mask_np.ravel(), output_np.ravel())
 
 
 def precision_score(target, prediction):
 
     mask_np = image_path_to_np(target)
-    output_np = image_path_to_np(prediction)
+    output_np = image_path_to_np(prediction).copy()
+    if np.unique(output_np).size > 2:
+        output_np[output_np > 0] = 255
     return metrics.precision_score(mask_np, output_np, average='micro')
 
 
 def recall_score(target, prediction):
 
     mask_np = image_path_to_np(target)
-    output_np = image_path_to_np(prediction)
+    output_np = image_path_to_np(prediction).copy()
+    if np.unique(output_np).size > 2:
+        output_np[output_np > 0] = 255
     return metrics.recall_score(mask_np, output_np, average='micro')
 
 
 def f1_score(target, prediction):
 
     mask_np = image_path_to_np(target)
-    output_np = image_path_to_np(prediction)
+    output_np = image_path_to_np(prediction).copy()
+    if np.unique(output_np).size > 2:
+        output_np[output_np > 0] = 255
     return metrics.f1_score(mask_np, output_np, average='micro')
 
 
 def tn_fp_fn_tp(target, prediction):
 
     mask_np = image_path_to_np(target)
-    output_np = image_path_to_np(prediction)
+    output_np = image_path_to_np(prediction).copy()
+    if np.unique(output_np).size > 2:
+        output_np[output_np > 0] = 255
     return metrics.confusion_matrix(mask_np.ravel(), output_np.ravel()).ravel()
 
 
