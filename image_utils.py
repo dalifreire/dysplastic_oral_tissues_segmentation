@@ -2,10 +2,43 @@ import os
 import numpy as np
 import skimage.filters as sk_filters
 import skimage.exposure as sk_exposure
+import cv2
 
 from PIL import Image, ImageDraw, ImageOps
 from skimage import io, color
 from pathlib import Path
+
+
+def load_np_image(path, color_model="RGB"):
+
+    with open(path, 'rb') as f:
+
+        if color_model == "GRAY":
+            return io.imread(path, as_gray=True)
+
+        rgb = io.imread(path)
+        if color_model == "HSV":
+            if rgb.shape[2] > 3:  # removes the alpha channel
+                rgb = cv2.cvtColor(rgb, cv2.COLOR_RGBA2RGB)
+
+            hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+            # For HSV, 'H' range is [0, 179], 'S' range is [0, 255] and 'V' range is [0, 255]
+            hsv = hsv / [179, 255, 255]
+            return hsv
+
+        elif color_model == "LAB":
+            if rgb.shape[2] > 3:  # removes the alpha channel
+                rgb = color.rgba2rgb(rgb)
+
+            lab = color.rgb2lab(rgb)
+            # For LAB, 'L' range is [0, 100], 'A' range is [-127, 127] and 'B' range is [-127, 127]
+            lab = ((lab + [0, 128, 128]) / [100, 255, 255])
+            return lab
+
+        if rgb.shape[2] > 3:  # removes the alpha channel
+            rgb = color.rgba2rgb(rgb)
+
+        return rgb
 
 
 def load_pil_image(path, gray=False, color_model="RGB"):
