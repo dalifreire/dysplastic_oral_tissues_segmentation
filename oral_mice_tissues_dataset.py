@@ -52,7 +52,7 @@ class OralMiceTissuesDataset(Dataset):
 
     def __getitem__(self, idx):
         path_img, path_mask, fname = self.samples[idx]
-        image = load_pil_image(path_img, False, self.color_model)
+        image = load_pil_image(path_img, True, self.color_model)
         mask = load_pil_image(path_mask) if os.path.exists(path_mask) else None
 
         x, y, fname, original_size = self.transform(image, mask, fname)
